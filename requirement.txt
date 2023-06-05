@@ -1,4 +1,4 @@
 streamlit
 watchdog
-streamlit_option_menu
+streamlit-option-menu
 gpt4allj

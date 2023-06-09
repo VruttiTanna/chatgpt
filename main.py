@@ -6,7 +6,8 @@ st.set_page_config(layout='wide')
 from streamlit_option_menu import option_menu
 import gpt4all
 
-model =  gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
+#model =  gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
+model =  gpt4all.GPT4All("ggml-Nous-Hermes")
 
 def show_messages(text):
     messages_str = [

@@ -7,7 +7,7 @@ from streamlit_option_menu import option_menu
 import gpt4all
 
 #model =  gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
-model =  gpt4all.GPT4All("ggml-Nous-Hermes")
+model =  gpt4all.GPT4All("ggml-gpt4all-l13b-snoozy")
 
 def show_messages(text):
     messages_str = [

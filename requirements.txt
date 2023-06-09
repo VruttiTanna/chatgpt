@@ -5,4 +5,4 @@ gpt4all-j
 libtorch
 onnxruntime
 streamlit_option_menu
-streamlit-option-menu
+gpt4all

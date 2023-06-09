@@ -1,12 +1,25 @@
 #!/usr/bin/env python
 
 import streamlit as st
+import requests
+import os
 from gpt4allj import Model
 st.set_page_config(layout='wide')
 from streamlit_option_menu import option_menu
 
-model = Model('./model/ggml-gpt4all-j.bin')
+# Download the model file
+model_file_url = "https://gpt4all.io/models/ggml-gpt4all-j.bin"
+model_file_path = "./model/ggml-gpt4all-j.bin"
+if not os.path.exists(model_file_path):
+    st.info("Downloading model file...")
+    response = requests.get(model_file_url, stream=True)
+    with open(model_file_path, "wb") as file:
+        for chunk in response.iter_content(chunk_size=1024):
+            if chunk:
+                file.write(chunk)
+    st.success("Model file downloaded successfully.")
 
+model = Model(model_file_path)
 def show_messages(text):
     messages_str = [
         f"{_['role']}: {_['content']}" for _ in st.session_state["messages"][1:]

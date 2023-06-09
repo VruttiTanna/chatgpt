@@ -7,13 +7,13 @@ from gpt4allj import Model
 import gpt4all
 st.set_page_config(layout='wide')
 from streamlit_option_menu import option_menu
-gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
+model_file_path = gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
 messages = [{"role": "user", "content": "Name 3 colors"}]
 gptj.chat_completion(messages)
 
 # Download the model file
 model_file_url = "https://gpt4all.io/models/ggml-gpt4all-j.bin"
-model_file_path = "./model/ggml-gpt4all-j.bin"
+#model_file_path = "./model/ggml-gpt4all-j.bin"
 if not os.path.exists(model_file_url):
     st.info("Downloading model file...")
     response = requests.get(model_file_url, stream=True)

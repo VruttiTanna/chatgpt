@@ -7,8 +7,8 @@ st.set_page_config(layout='wide')
 from streamlit_option_menu import option_menu
 
 # Initialize the GPT4All model
-model = gpt4all.GPT4All("ggml-gpt4all-l13b-snoozy.bin")
-
+#model = gpt4all.GPT4All("ggml-gpt4all-l13b-snoozy.bin")
+model =  gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
 def show_messages(messages):
     messages_str = [f"{_['role']}: {_['content']}" for _ in messages]
     st.text_area("Messages", value="\n".join(messages_str), height=400)

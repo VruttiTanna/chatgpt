@@ -1,22 +1,20 @@
 #!/usr/bin/env python
 
 import streamlit as st
-from gpt4allj import Model
-st.set_page_config(layout='wide')
-from streamlit_option_menu import option_menu
 import gpt4all
 
-#model =  gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
-model =  gpt4all.GPT4All("ggml-gpt4all-l13b-snoozy.bin")
+st.set_page_config(layout='wide')
+from streamlit_option_menu import option_menu
 
-def show_messages(text):
-    messages_str = [
-        f"{_['role']}: {_['content']}" for _ in st.session_state["messages"][1:]
-    ]
-    text.text_area("Messages", value=str("\n".join(messages_str)), height=400)
+# Initialize the GPT4All model
+model = gpt4all.GPT4All("ggml-gpt4all-l13b-snoozy.bin")
+
+def show_messages(messages):
+    messages_str = [f"{_['role']}: {_['content']}" for _ in messages]
+    st.text_area("Messages", value="\n".join(messages_str), height=400)
 
 with st.sidebar:
-    choose = option_menu("Streamlit GPT", [ "GPT Play Ground","About","Contact"],
+    choose = option_menu("Streamlit GPT", ["GPT Play Ground", "About", "Contact"],
                          icons=['kanban', 'book', 'person lines fill'],
                          menu_icon="cast", default_index=0,
                          styles={
@@ -27,56 +25,47 @@ with st.sidebar:
                              "nav-link-selected": {"background-color": "#2f5335"},
                          }
                          )
-if choose == "About":
-    st.markdown(""" <style> .font {
-        font-size:30px ; font-family: 'Cooper Black'; color: #02ab21;} 
-        </style> """, unsafe_allow_html=True)
-    st.markdown('<p class="font">About the Streamlit GPT </p>', unsafe_allow_html=True)
 
-    st.write("This application uses GPT4ALL-J to generate answers for the questions.")
+if choose == "About":
+    st.markdown("""<style>.font {
+        font-size:30px; font-family: 'Cooper Black'; color: #02ab21;}
+        </style>""", unsafe_allow_html=True)
+    st.markdown('<p class="font">About the Streamlit GPT</p>', unsafe_allow_html=True)
+    st.write("This application uses GPT4ALL-J to generate answers for questions.")
 
 elif choose == "GPT Play Ground":
-    st.markdown(""" <style> .font {
-                font-size:30px ; font-family: 'Cooper Black'; color: #02ab21;} 
-                </style> """, unsafe_allow_html=True)
+    st.markdown("""<style>.font {
+                font-size:30px; font-family: 'Cooper Black'; color: #02ab21;}
+                </style>""", unsafe_allow_html=True)
+    st.markdown('<p class="font">GPT4 Play Ground:</p>', unsafe_allow_html=True)
 
     BASE_PROMPT = [{"role": "AI", "content": "You are a helpful assistant."}]
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = BASE_PROMPT
 
-    st.markdown(""" <style> .font {
-                        font-size:30px ; font-family: 'Cooper Black'; color: #02ab21;} 
-                        </style> """, unsafe_allow_html=True)
-    st.markdown('<p class="font">GPT4 Play Ground :</p>', unsafe_allow_html=True)
-
     text = st.empty()
-    show_messages(text)
+    show_messages(st.session_state["messages"][1:])
 
     prompt = st.text_input("Prompt:", value="Enter your message here...")
 
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Send"):
-            with st.spinner("Generating response..."):
-                st.session_state["messages"] += [{"role": "You", "content": prompt}]
-                print(st.session_state["messages"][-1]["content"])
-                message_response = model.generate(st.session_state["messages"][-1]["content"])
-                st.session_state["messages"] += [
-                    {"role": "AI", "content": message_response}
-                ]
-                show_messages(text)
+            if prompt.strip() != "":
+                with st.spinner("Generating response..."):
+                    st.session_state["messages"].append({"role": "You", "content": prompt})
+                    message_response = model.generate(st.session_state["messages"][-1]["content"])
+                    st.session_state["messages"].append({"role": "AI", "content": message_response})
+                    show_messages(st.session_state["messages"][1:])
     with col2:
         if st.button("Clear"):
             st.session_state["messages"] = BASE_PROMPT
-            show_messages(text)
-
+            show_messages(st.session_state["messages"][1:])
 
 elif choose == "Contact":
-    st.markdown(""" <style> .font {
-            font-size:30px ; font-family: 'Cooper Black'; color: #02ab21;} 
-            </style> """, unsafe_allow_html=True)
-    st.markdown('<p class="font">Contact </p>', unsafe_allow_html=True)
-
-    st.write("Contact to ....")
-
+    st.markdown("""<style>.font {
+            font-size:30px; font-family: 'Cooper Black'; color: #02ab21;}
+            </style>""", unsafe_allow_html=True)
+    st.markdown('<p class="font">Contact</p>', unsafe_allow_html=True)
+    st.write("Contact information goes here...")
